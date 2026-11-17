@@ -2,8 +2,6 @@
 
 Computational fluid dynamics projects written from scratch in Python. I derive the governing equations by hand first, implement them, and then validate against analytical theory or published benchmark data.
 
-I'm Nakul Srivatsan, a mechanical engineering student at Eastern Michigan University, focused on CFD, aerodynamics and compressible flow.
-
 ## Projects
 
 | # | Project | Status | Highlights |
@@ -13,6 +11,16 @@ I'm Nakul Srivatsan, a mechanical engineering student at Eastern Michigan Univer
 
 ![Nozzle flow field](01-nozzle-flow/figures/flow_field.png)
 
+## Structures: Howe truss bridge FEA study
+
+**Status:** In progress (ME 100 team project, Fall 2026). Write-up will be posted after the project is graded.
+
+A prestressed Howe truss bridge (35 cm span) built from rods, 3D-printed PLA connectors and fishing-line tension members.
+- Member forces for every rod from hand method-of-joints and method-of-sections calculations
+- Static FEA of each printed connector in SOLIDWORKS Simulation, loaded with the socket forces from the hand analysis
+- Hand stress estimate used as a sanity check on the FEA (factor of safety ≈ 4 at the fillets)
+- Planned: buckling check on the compression rods, predicted failure load and mode, comparison with the load test
+
 ## Approach
 - **Physics first.** No CFD frameworks for the core solvers. Each term is derived and discretized by hand before it is coded.
 - **Validation built in.** Conservation checks and comparisons to theory are part of each solver, and each README says what the checks do and do not prove.
@@ -21,11 +29,12 @@ I'm Nakul Srivatsan, a mechanical engineering student at Eastern Michigan Univer
 ## Background
 - White, *Fluid Mechanics* (7th ed.), worked through Ch. 4 (differential relations, vorticity, stream function, exact viscous solutions)
 - Barba, *CFD Python: 12 Steps to Navier-Stokes*
-- Brunton, ME 564/565 lectures (numerical methods and dynamical systems), in progress
-- Coursework: Calculus sequence, Linear Algebra, Differential Equations; Statics in progress
+- Brunton, ME 564/565 lecture series (numerical methods and dynamical systems)
+- Math: Calculus I–III, Linear Algebra, Differential Equations
+- Engineering core: Statics (current); Dynamics, Mechanics of Materials, Thermodynamics and Fluid Mechanics (upcoming)
 
 ## Tools
-Python (NumPy, SciPy, Matplotlib) · SolidWorks and SOLIDWORKS Simulation · MATLAB
+Python (NumPy, SciPy, Matplotlib) · Jupyter Notebook · SolidWorks and SOLIDWORKS Simulation (FEA) · MATLAB · Excel · Bell Crank (suspension design)
 
 ## Contact
 Srivatsannakul@gmail.com

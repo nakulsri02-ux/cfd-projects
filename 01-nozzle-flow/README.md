@@ -2,7 +2,7 @@
 
 **Author:** Nakul Srivatsan  
 **Date:** February–March 2026 (solver) · November 2026 (SolidWorks model, figures)  
-**Language:** Python 3 (used Claude as a coding assistant) · NumPy · SciPy · Matplotlib
+**Language:** Python 3 · NumPy · SciPy · Matplotlib
 
 ---
 
