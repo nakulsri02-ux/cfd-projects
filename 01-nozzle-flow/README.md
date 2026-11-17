@@ -1,16 +1,16 @@
 # Quasi-1D Compressible Nozzle Flow Solver
 
 **Author:** Nakul Srivatsan  
-**Date:** February/March 2026  
+**Date:** February–March 2026 (solver) · November 2026 (SolidWorks model, figures)  
 **Language:** Python 3 (used Claude as a coding assistant) · NumPy · SciPy · Matplotlib
 
 ---
 
 ## Project Scope
 
-This is My first project in my self-directed CFD portfolio built to teach and show the fundementals and basic applications of computational fluid dynamics.
+This is my first project in my self-directed CFD portfolio built to teach and show the fundamentals and basic applications of computational fluid dynamics.
 
-The goal was to build a physics-first solver from scratch, not using any CFD framework or copying a tutorial rather deriving the governing equations and implementing them, then validating against analytical theory, and comparing against known resluts.
+The goal was to build a physics-first solver from scratch, not using any CFD framework or copying a tutorial rather deriving the governing equations and implementing them, then validating against analytical theory, and comparing against known results.
 
 The solver computes isentropic compressible flow through a user generated converging-diverging (de Laval) nozzle. Given reservoir conditions and a custom geometry, it outputs the full flow field: Mach number, pressure, temperature, density, and velocity at every point along the nozzle axis. Mass flow conservation is validated to better than 0.0001%.
 
@@ -140,15 +140,49 @@ nozzle_solver.py
 
 ---
 
-## Sample Output
+## Results
 
-| Location | M | P (Pa) | T (K) | V (m/s) |
-|----------|---|--------|-------|---------|
-| Inlet | ~0.18 | ~99,100 | ~299 | ~62 |
-| Throat | 1.000 | 53,471 | 250.0 | 316.9 |
-| Exit | ~2.20 | ~9,380 | ~152 | ~544 |
+Case shown: A_in/A* = 3, A_exit/A* = 2, throat at mid-length, P0 = 1 atm, T0 = 300 K, 101 grid points. Regenerate everything with `python make_figures.py`.
 
-Mass flow variation: **< 0.0001%** ✅
+![Flow field](figures/flow_field.png)
+
+The flow accelerates through the converging section, reaches exactly Mach 1 at the throat, and keeps accelerating supersonically in the diverging section while pressure and temperature fall. The slope change at the throat comes from the geometry: the two parabolic sections meet with a kink in dA/dx (see Bug 2 and the SolidWorks notes below).
+
+| Station | A/A* | M | P/P0 | T/T0 | P [Pa] | T [K] | V [m/s] |
+|---|---|---|---|---|---|---|---|
+| Inlet | 3.000 | 0.1974 | 0.9732 | 0.9923 | 98,608 | 297.7 | 68.3 |
+| Throat | 1.000 | 1.0000 | 0.5283 | 0.8333 | 53,528 | 250.0 | 316.9 |
+| Exit | 2.000 | 2.1972 | 0.0939 | 0.5088 | 9,518 | 152.6 | 544.1 |
+
+These match the standard isentropic flow tables for γ = 1.4 (A/A* = 2 supersonic: M = 2.197, P/P0 = 0.0939).
+
+### Validation
+
+![Mass conservation](figures/mass_conservation.png)
+
+| Check | Result |
+|---|---|
+| Mass flow variation along the nozzle | 2 × 10⁻¹⁰ % (target: < 0.0001 %) |
+| Solver mass flow vs. closed-form choked-flow formula | 236.4478 kg/s both, error ~10⁻¹² % |
+| Area-Mach relation residual at the solved Mach numbers | 6 × 10⁻¹² |
+
+What this does and does not show: the solver is algebraic (area-Mach relation plus isentropic relations at each station), so these checks confirm the root-finding picks the correct branch everywhere and the post-processing is consistent. It is not a test of a time-marching scheme. Shocks and back-pressure effects are not modeled yet (see What's Next).
+
+---
+
+## SolidWorks Model
+
+Files: [`solidworks/quasi_nozzle.SLDPRT`](solidworks/quasi_nozzle.SLDPRT), [`solidworks/nozzle_profile_mm.txt`](solidworks/nozzle_profile_mm.txt)
+
+The solver works in normalized areas, so I turned the same geometry into a physical part to connect the numerics to something I could measure.
+
+- **Area to radius:** for a circular cross-section A = πr², so r(x) = r_t · √(A(x)/A*). With a 20 mm throat radius and 200 mm length, that gives 21 profile points (in the .txt file).
+- **Build:** the points were imported as a curve, sketched as a spline, and revolved as a thin feature with a 3 mm wall.
+- **Check against the solver:** measured inner diameters in SolidWorks are 69.28 mm (inlet), 40.00 mm (throat) and 56.57 mm (exit). Squaring the diameter ratios gives area ratios of 3.000 and 2.000, the solver inputs, to four significant figures.
+- **Bug caught:** my first revolve thickened the wall inward, which shrank the flow passage and made every measured diameter wrong. The measurement check is what exposed it. The wall has to grow outward so the inner surface is the flow boundary.
+- **Throat kink:** the parabolic sections meet at the throat with a discontinuous slope. The algebraic solver doesn't care because it only uses A(x), but a real nozzle or a 2D/3D CFD run would, so a smooth throat radius is on the list for the next geometry revision.
+
+Planned: a compressible CFD comparison in Ansys Fluent (student version) on this geometry, and a simple structural study using the solver's wall pressure distribution as the load.
 
 ---
 
@@ -200,8 +234,9 @@ This guarantees a smooth quadratic profile on both sides regardless of throat po
 
 ## What's Next
 
-- **Project 2:** 2D lid-driven cavity flow — solving incompressible Navier-Stokes from scratch using finite differences (Python)
-- **Project 3:** NACA airfoil analysis — RANS turbulence modeling in OpenFOAM
+- Add back-pressure cases: normal shock in the diverging section and the over/under-expanded regimes
+- Compare against a Fluent run on the SolidWorks geometry
+- **Project 2:** 2D lid-driven cavity flow, incompressible Navier-Stokes from scratch with finite differences (in progress, see [`../02-cavity-flow`](../02-cavity-flow))
 
 ---
 
