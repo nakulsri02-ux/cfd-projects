@@ -27,7 +27,7 @@ A prestressed Howe truss bridge (35 cm span) built from rods, 3D-printed PLA con
 - **Bugs documented.** Each project records the bugs I hit and how the physics exposed them.
 
 ## Background
-- White, *Fluid Mechanics* (7th ed.), worked through Ch. 4 (differential relations, vorticity, stream function, exact viscous solutions)
+- White, *Fluid Mechanics* (7th ed.)
 - Barba, *CFD Python: 12 Steps to Navier-Stokes*
 - Brunton, ME 564/565 lecture series (numerical methods and dynamical systems)
 - Math: Calculus I–III, Linear Algebra, Differential Equations
